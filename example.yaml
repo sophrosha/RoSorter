@@ -1,0 +1,26 @@
+settings:
+  logs: false # вкл логов в каталоге rosorter. logs.txt
+  daemon: false # Включение демона(будет находится в трее)
+  timeout: "60m" # время сортировки(0m сортировка ручная по требованию юзера)
+  gui: false # Использование диалогов в tk
+  silent: true # Работа в тихую без вывода уведов об сортировке
+
+directories: # Указание всех директории
+  downloads: # Название каталога
+    path: "/home/user/Downloads" # Путь
+    files: ["png", "jpg", "pdf", "directory"] # То что парсим
+    names: # Указываем каталоги(обязательно)
+    # - расширение:каталог
+      - "png": "Photos"
+      - "jpg": "Photos"
+      - "pdf": "Docs"
+      - "directory": "Folders"
+
+  documents:
+    path: "/home/user/Documents"
+    files: ["*"] # Все парсим
+    names:
+      - "pdf": "Files"
+      - "*": "*" # Все парсим по своим каталогам(conf = каталог будет conf)
+
+# Код конфига необходимо указывать по порядку как было указанно
