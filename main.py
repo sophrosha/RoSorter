@@ -5,6 +5,8 @@ import time
 import pystray
 import yaml
 import tkinter
+import shutil
+from pathlib import Path
 
 '''
 Главный сортировщик
@@ -17,27 +19,92 @@ validate_os - Проверяет какая стоит система и воз�
 
 Сортировка начинается исключительно после класса конфига
 '''
-class sorter:
-    def __init__(self): pass # принятие всех опции из конфига
-    def sort_windows(self): pass # сортировка в windows
-    def sort_unix(self): pass # сортировка в unix-like
-    def validate_os(self): pass # валидация системы
 
+class sorter:
+    def __init__(self, catalogs={}, settings={}): # принятие всех опции из конфига
+        self.catalogs = catalogs
+        self.settings = settings
+
+        if catalogs is None:
+            pass
+        elif settings is None:
+            pass
+        else:
+            pass
+
+    def init(self):
+        self.sort(os.name)
+
+    def sort(self, system): # Сортировка системы
+        if system == "nt":
+            pass
+        else: # Линукс
+            pass
 
 '''
 Обработчик конфигурации
 
 Достает конфиг судя по директории(либо если нету то создает example конфигурацию)
-Функции: validate_config, parser
-
-validate_config/parser
-validate_config - проверяет наличие конфига в определенном каталоге и возвращает True если он был, если он был создан автоматом то возвращает False
-parser - Возвращает значения которые были указаны в словаре(для удобства обращения)
 '''
 class config:
-    def __init__(self): pass # инициализация
-    def validate_config(self): pass # валидация конфига
-    def parser(self): pass # хранение конфигурации внутри()
+    def __init__(self): # инициализация
+        if os.name == 'nt':
+            self.username = os.environ.get('USERNAME')
+            self.home_path = Path(f"C:/Users/{self.username}")
+            self.sys_path = Path("C:\\Program Files")
+
+            self.filepath = self.home_path / "AppData/Roaming/rosorter.yaml"
+            #self.example_config = self.sys_path / "RoSorter/src/example.yaml"
+            self.example_config = self.home_path / "Documents/Scripts/RoSorter/example.yaml"
+        else: # Линукс
+            pass
+
+    def validate_config(self): # валидация конфига
+        if os.name == 'nt':
+            username = os.environ.get("USERNAME")
+            system = os.name
+            if os.path.exists(self.filepath):
+                return 1
+            else:
+                print("[RoSorter] : Не найден файл конфигурации")
+                print("[RoSorter] : Создаю файл конфигурации")
+                config = self.create_config(system)
+                if config == 1:
+                    print(f"[RoSorter] : Создана конфигурация! Расположение: {self.filepath}")
+                    print("[RoSorter] : Настройте пожалуйста конфигурацию под себя!")
+                    print('[RoSorter] : Выход!')
+                    sys.exit()
+        else: # Линукс
+            pass
+                    
+    def create_config(self, system):
+        if system == 'nt':
+            try:
+                self.example_config.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(self.example_config, self.filepath)
+                return 1
+            except Exception as error:
+                print(f"[RoSorter] : Произошла ошибка! Код: {error}")
+                sys.exit()
+        else: # Линукс
+            pass
+
+    def parser(self):
+        with open(self.filepath, 'r', encoding='utf-8') as f:
+            config = yaml.safe_load(f)
+            # спарсить и все перетащить в нужный список
+            # так же спарсить настройки и перетащить в свой список(если что то из настроек отсуствует то добавить эти настройки в словарь но указать дефолт значение)
+            for directory in len(config['directories']):
+                
+
+    def run(self): # хранение конфигурации внутри()
+        # Валидация конфигурации
+        self.validate_config()
+
+        # Парсинг конфигурации
+        
+        
+        
 
 '''
 Демон
@@ -50,10 +117,9 @@ class daemon:
 class tray:
     def __init__(): pass
 
-from pprint import pprint
-def main(): pass
+def main():
+    conf = config()
+    conf.parser()
+    
 if __name__ == "__main__": 
-    with open('example.yaml', encoding='utf-8') as confe:
-        f = yaml.safe_load(confe)
-        print(f.settings.timeout)
-        pprint(f)
+    main()
