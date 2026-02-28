@@ -53,9 +53,10 @@ class config:
             self.home_path = Path(f"C:/Users/{self.username}")
             self.sys_path = Path("C:\\Program Files")
 
-            self.filepath = self.home_path / "AppData/Roaming/rosorter.yaml"
+            #self.filepath = self.home_path / "AppData/Roaming/rosorter.yaml"
+            self.filepath = self.home_path / "Documents/Projects/RoSorter/example.yaml"
             #self.example_config = self.sys_path / "RoSorter/src/example.yaml"
-            self.example_config = self.home_path / "Documents/Scripts/RoSorter/example.yaml"
+            self.example_config = self.home_path / "Documents/Projects/RoSorter/example.yaml"
         else: # Линукс
             pass
 
@@ -90,20 +91,50 @@ class config:
             pass
 
     def parser(self):
+        catalogs = {}
+        settings = {}
         with open(self.filepath, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
             # спарсить и все перетащить в нужный список
             # так же спарсить настройки и перетащить в свой список(если что то из настроек отсуствует то добавить эти настройки в словарь но указать дефолт значение)
-            for directory in len(config['directories']):
-                
 
+            # Проверка наличия масивов settings, directories.
+            cout = 0
+            for key, _ in config.items():
+                if key in {'settings', 'directories'}:
+                    cout += 1
+                else:
+                    print(f'[RoSorter] !: Ошибка, Найдена неверная опция: {key}. Выход')
+                    sys.exit()
+            if cout != 2:
+                print(f'[RoSorter] !: Ошибка, отсуствует settings или directories. Выход')
+                sys.exit()
+
+            # Парсинг settings
+            for key, value in config['settings'].items():
+                if key in {'logs', 'daemon', 'timeout', 'gui', 'silent'}: 
+                    settings[key] = value
+                else:
+                    print(f'[RoSorter] !: Ошибка, Найдена неверная опция: {key}. Выход')
+                    sys.exit()
+
+            # Парсинг directories
+            for directory in config['directories']:
+                catalogs[directory] = {}
+                # Проверка значений, если есть неопределенное значение то выход
+                for key, value in config['directories'][directory].items():
+                    if key in {'path', 'files', 'names'}: 
+                        catalogs[directory][key] = value
+                    else:
+                        print(f'[RoSorter] !: Ошибка, Найдена неверная опция: {key} в {directory}. Выход')
+                        sys.exit()
+        return catalogs, settings
+                
     def run(self): # хранение конфигурации внутри()
         # Валидация конфигурации
         self.validate_config()
-
-        # Парсинг конфигурации
-        
-        
+        catalogs, settings = self.parser()
+        return catalogs, settings
         
 
 '''
@@ -119,7 +150,7 @@ class tray:
 
 def main():
     conf = config()
-    conf.parser()
+    conf.run()
     
 if __name__ == "__main__": 
     main()
