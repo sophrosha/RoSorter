@@ -1,0 +1,9 @@
+{
+    "window.density.editorTabHeight": "compact",
+    "debug.hideLauncherWhileDebugging": false,
+    "workbench.notifications.showInTitleBar": true,
+    "diffEditor.renderGutterMenu": true,
+    "chat.customizationsMenu.enabled": true,
+    "workbench.layoutControl.type": "both",
+    "window.border": "off"
+}
