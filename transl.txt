@@ -1,0 +1,53 @@
+--
+RUSSIAN
+--
+
+main.py
+----
+mission_option = f'[RoSorter] !: Ошибка, отсуствует значение {option}. Выход'
+finded_ignore = f'[RoSorter] : Найден ignore в {catalog}, убираем файлы.'
+delete_ignore = f'[RoSorter] : Убираем {name + file_extension}'
+deleted_ignore = f'[RoSorter] : {name+file_extension} Убран.'
+searched_some_extensions = '[RoSorter] ?: Найдено несколько расширений в files при указанном *. Пропуск остальных расширений.'
+
+config.py 
+----
+config_not_found = '[RoSorter] : Не найден файл конфигурации'
+config_create = '[RoSorter] : Создаю файл конфигурации'
+config_created = f'[RoSorter] : Создана конфигурация! Расположение: {self.filepath}'
+please_set_config = '[RoSorter] : Настройте пожалуйста конфигурацию под себя!'
+exit = '[RoSorter] : Выход!'
+fail = f'[RoSorter] : Произошла ошибка! Код: {error}'
+found_error_option = f'[RoSorter] !: Ошибка, Найдена неверная опция: {key}. Выход!'
+missing_settings_directories = f'[RoSorter] !: Ошибка, отсуствует settings или directories. Выход!'
+found_error_option_dir = f'[RoSorter] !: Ошибка, Найдена неверная опция: {key} в {directory}. Выход!'
+missing_directory = '[RoSorter] !: Ошибка, не существует данного каталога в {}'.formatcatalogs[catalog]['path']
+create_catalog = '[RoSorter] : Создать каталог? Y/n > '
+creating_catalog = '[RoSorter] : Создаю каталог'
+
+--
+ENGLISH
+--
+
+main.py
+----
+mission_option = 
+finded_ignore = 
+delete_ignore = 
+deleted_ignore = 
+searched_some_extensions = 
+
+config.py 
+----
+config_not_found = 
+config_create = 
+config_created = 
+please_set_config = 
+exit = 
+fail = 
+found_error_option = 
+missing_settings_directories = 
+found_error_option_dir = 
+missing_directory = 
+create_catalog = 
+creating_catalog = 

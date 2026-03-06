@@ -4,6 +4,8 @@ import os
 import shutil
 from pathlib import Path
 
+from src.languages import LANGUAGE
+
 '''
     Обработчик конфигурации
 
@@ -12,7 +14,8 @@ from pathlib import Path
 '''
 
 class config:
-    def __init__(self): # инициализация
+    def __init__(self, language='en_US'): # инициализация
+        self.language = language
         if os.name == 'nt':
             self.username = os.environ.get('USERNAME')
             self.home_path = Path(f"C:/Users/{self.username}")
@@ -32,13 +35,13 @@ class config:
             if os.path.exists(self.filepath):
                 return 1
             else:
-                print("[RoSorter] : Не найден файл конфигурации")
-                print("[RoSorter] : Создаю файл конфигурации")
+                print(LANGUAGE[self.language]['config_not_found'])
+                print(LANGUAGE[self.language]['config_create'])
                 config = self.create_config(system)
                 if config == 1:
-                    print(f"[RoSorter] : Создана конфигурация! Расположение: {self.filepath}")
-                    print("[RoSorter] : Настройте пожалуйста конфигурацию под себя!")
-                    print('[RoSorter] : Выход!')
+                    print(LANGUAGE[self.language]['config_created'].format(self.filepath))
+                    print(LANGUAGE[self.language]['config_please_set_config'])
+                    print(LANGUAGE[self.language]['exit'])
                     sys.exit()
         else: # Линукс
             pass
@@ -50,7 +53,7 @@ class config:
                 shutil.copy2(self.example_config, self.filepath)
                 return 1
             except Exception as error:
-                print(f"[RoSorter] : Произошла ошибка! Код: {error}")
+                print(LANGUAGE[self.language]['fail'].format(error))
                 sys.exit()
         else: # Линукс
             pass
@@ -68,10 +71,10 @@ class config:
                 if key in {'settings', 'directories'}:
                     cout += 1
                 else:
-                    print(f'[RoSorter] !: Ошибка, Найдена неверная опция: {key}. Выход')
+                    print(LANGUAGE[self.language]['found_error_option'].format(key))
                     sys.exit()
             if cout != 2:
-                print(f'[RoSorter] !: Ошибка, отсуствует settings или directories. Выход')
+                print(LANGUAGE[self.language]['missing_settings_directories'])
                 sys.exit()
 
             # Парсинг settings
@@ -79,7 +82,7 @@ class config:
                 if key in {'logs', 'daemon', 'timeout', 'gui', 'silent'}: 
                     settings[key] = value
                 else:
-                    print(f'[RoSorter] !: Ошибка, Найдена неверная опция: {key}. Выход')
+                    print(LANGUAGE[self.language]['found_error_option'].format(key))
                     sys.exit()
 
             # Парсинг directories
@@ -90,19 +93,19 @@ class config:
                     if key in {'path', 'files', 'names', 'ignore'}: 
                         catalogs[directory][key] = value
                     else:
-                        print(f'[RoSorter] !: Ошибка, Найдена неверная опция: {key} в {directory}. Выход')
+                        print(LANGUAGE[self.language]['found_error_option_dir'].format(key, directory))
                         sys.exit()
             
             # Валидация path
             for catalog in catalogs:
                 if not os.path.isdir(catalogs[catalog]['path']):
-                    print("[RoSorter] !: Ошибка, не существует данного каталога в {}".format(catalogs[catalog]['path']))
-                    answer = input("[RoSorter] : Создать каталог? (Y/n) > ")
+                    print(LANGUAGE[self.language]['missing_directory'].format(catalogs[catalog]['path']))
+                    answer = input(LANGUAGE[self.language]['create_catalog'] + ' ')
                     if answer.lower() in 'y':
-                        print("[RoSorter] : Создаю каталог")
+                        print(LANGUAGE[self.language]['creating_catalog'])
                         os.mkdir(catalogs[catalog]['path'])
                     else:
-                        print("[RoSorter] : Выход!")
+                        print(LANGUAGE[self.language]['exit'])
                         sys.exit()
                     
         return catalogs, settings
@@ -111,4 +114,4 @@ class config:
         # Валидация конфигурации
         self.validate_config()
         catalogs, settings = self.parser()
-        return catalogs, settings
+        return catalogs, settings, 'en_US'

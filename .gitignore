@@ -1,3 +1,8 @@
+# IDE
 .vscode
-.venv
 .pycharm
+
+# Dev files
+.venv
+src/__pycache__
+__pycache__

@@ -1,5 +1,5 @@
 {
-    "window.density.editorTabHeight": "compact",
+    "window.density.editorTabHeight": "default",
     "debug.hideLauncherWhileDebugging": false,
     "workbench.notifications.showInTitleBar": true,
     "diffEditor.renderGutterMenu": true,
