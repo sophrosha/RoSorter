@@ -57,6 +57,13 @@ class sorter:
                     print(LANGUAGE[self.language]['deleted_ignore'].format(name + file_extension))
         return files_catalogs
 
+    def remove_names_catalogs(self, names, files_catalogs):
+        if names != None:
+            for filename, fil in files_catalogs:
+                if any(filename in n for n in names):
+                    files_catalogs.remove((filename, fil))
+        return files_catalogs
+
     # копируем файлы
     def copy(self, file_name, path, name_folder):
         path_dir = Path(path) / name_folder
@@ -65,7 +72,7 @@ class sorter:
         if not os.path.isdir(path_dir):
             print(f"[RoSorter] : Отсуствует каталог для {file_name}. Создаю")
             os.mkdir(path_dir)
-
+            
         try:
             shutil.move(path_file, path_dir)
         except PermissionError as e:
@@ -89,7 +96,10 @@ class sorter:
                 catalog_name = next(itm for itm in names if itm[0] == fil.replace('.', ''))
                 self.copy(filename + fil, path_file, catalog_name[1])
             elif any('*' in n for n in names):
-                self.copy(filename + fil, path_file, fil.replace('.', ''))
+                if os.path.isdir(Path(path_file) / (filename + fil)): # TODO
+                    self.copy(filename + fil, path_file, 'catalog')
+                else:
+                    self.copy(filename + fil, path_file, fil.replace('.', ''))
             else:
                 print(f"[RoSorter] : {filename + fil} отсуствует в names. Добавьте * для добавления всех файлов по своим каталогам")
                 continue
@@ -98,9 +108,13 @@ class sorter:
     def main(self, system):
         if system == "nt":
             for catalog in self.catalogs:
+                # достаем переменные из конфига
                 path_file, files, ignore, names = self.validate_options(catalog)
+                # создаем список файлов и удаляем ignore каталоги, созданные каталоги
                 files_catalogs = [os.path.splitext(n) for n in os.listdir(path_file)]
                 files_catalogs = self.remove_ignore_files(ignore, files_catalogs, catalog)
+                files_catalogs = self.remove_names_catalogs(names, files_catalogs)
+                # сортируем и копируем
                 self.sort(files_catalogs, path_file, files, names)
         else:
             pass
