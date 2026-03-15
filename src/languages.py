@@ -1,5 +1,5 @@
 LANGUAGE = {
-    'ru_RU': {
+    'ru-RU': {
         'mission_option': '[RoSorter] !: Ошибка, отсуствует значение {}. Выход',
         'found_ignore': '[RoSorter] : Найден ignore в {}, убираем файлы.',
         'delete_ignore': '[RoSorter] : Убираем {}',
@@ -19,7 +19,7 @@ LANGUAGE = {
         'creating_catalog': '[RoSorter] : Создаю каталог',
         'found_language': '[RoSorted] : Найден язык: {}, ставим'
     },
-    'en_US': {
+    'en-US': {
         'mission_option': '[RoSorter] !: Error, missing option {}. Exit',
         'found_ignore': '[RoSorter] : found ignore in {}, deleting files.',
         'delete_ignore': '[RoSorter] : delete {}',

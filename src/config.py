@@ -19,12 +19,12 @@ class config:
         if os.name == 'nt':
             self.username = os.environ.get('USERNAME')
             self.home_path = Path(f"C:/Users/{self.username}")
-            self.sys_path = Path("C:\\Program Files")
+            self.sys_path = Path("C:/Program Files")
 
             #self.filepath = self.home_path / "AppData/Roaming/rosorter.yaml"
-            self.filepath = self.home_path / "Documents/Projects/RoSorter/src/example.yaml"
+            self.filepath = self.home_path / "Documents/Projects/RoSorter-1/src/example.yaml"
             #self.example_config = self.sys_path / "RoSorter/src/example.yaml"
-            self.example_config = self.home_path / "Documents/Projects/RoSorter/src/example.yaml"
+            self.example_config = self.home_path / "Documents/Projects/RoSorter-1/src/example.yaml"
         else: # Линукс
             pass
 
@@ -81,6 +81,8 @@ class config:
             for key, value in config['settings'].items():
                 if key in {'logs', 'daemon', 'timeout', 'gui', 'silent'}: 
                     settings[key] = value
+                elif key in 'language':
+                    language = value
                 else:
                     print(LANGUAGE[self.language]['found_error_option'].format(key))
                     sys.exit()
@@ -107,11 +109,14 @@ class config:
                     else:
                         print(LANGUAGE[self.language]['exit'])
                         sys.exit()
-                    
-        return catalogs, settings
+        
+        if not language in settings:
+            language = 'en-US'
+
+        return catalogs, settings, language
                 
     def run(self): # хранение конфигурации внутри()
         # Валидация конфигурации
         self.validate_config()
-        catalogs, settings = self.parser()
-        return catalogs, settings, 'en_US'
+        catalogs, settings, language = self.parser()
+        return catalogs, settings, language
