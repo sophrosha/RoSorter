@@ -3,8 +3,8 @@ from src.languages import LANGUAGE
 import sys, os
 from pathlib import Path
 
-class sorter:
-    def __init__(self, catalogs, settings, language='ru-RU'): # принятие всех опции из конфига
+class Sorter:
+    def __init__(self, catalogs, settings, language='ru-RU'):
         self.language = language
         self.catalogs = catalogs
         self.settings = settings
@@ -16,7 +16,6 @@ class sorter:
         for option, needed in options.items():
             if option not in self.catalogs[catalog]:
                 if needed == False:
-                    #added_opts.append(option)
                     continue
                 else:
                     print(LANGUAGE[self.language]['missing_option'].format(option))
@@ -36,9 +35,6 @@ class sorter:
         else:
             ignore = None
 
-        #names = self.catalogs[catalog]['names'] if 'names' in added_opts else None
-        #ignore = self.catalogs[catalog]['ignore'] if 'ignore' in added_opts else None
-
         names1 = []
         for el in names:
             for key, value in el.items():
@@ -47,22 +43,22 @@ class sorter:
         return path_file, files, ignore, names1
     
     # при наличии ignore убираем файлы находящиеся в ignore с списка
-    def remove_ignore_files(self, ignore, files_catalogs, catalog):
+    def apply_ignore(self, ignore, content_folder, catalog):
         if ignore != None:
             print(LANGUAGE[self.language]['found_ignore'].format(catalog))
-            for name, file_extension in files_catalogs:
+            for name, file_extension in content_folder:
                 if name + file_extension in ignore:
                     print(LANGUAGE[self.language]['delete_ignore'].format(name + file_extension))
-                    files_catalogs.remove((name, file_extension))
+                    content_folder.remove((name, file_extension))
                     print(LANGUAGE[self.language]['deleted_ignore'].format(name + file_extension))
-        return files_catalogs
+        return content_folder
 
-    def remove_names_catalogs(self, names, files_catalogs):
+    def apply_names(self, names, content_folder):
         if names != None:
-            for filename, fil in files_catalogs:
+            for filename, fil in content_folder:
                 if any(filename in n for n in names):
-                    files_catalogs.remove((filename, fil))
-        return files_catalogs
+                    content_folder.remove((filename, fil))
+        return content_folder
 
     # копируем файлы
     def copy(self, file_name, path, name_folder):
@@ -79,21 +75,19 @@ class sorter:
             print(f"Файл занят процессом, пропуск")
             return None
     
-    def sort(self, files_catalogs, path_file, files, names):
-        for filename, fil in files_catalogs:
-            # проверяем наличие расширения в files
+    def sort(self, content_folder, path_file, files, names):
+        for filename, fil in content_folder:
             if '*' in files:
                 if len(files) > 1:
                     print("[RoSorter] ?: Найдено несколько расширений кроме *. Пропуск.")
                 elif not fil.replace('.', '') in files:
-                    #print(f"[RoSorter] : {fil} отсуствует в files, пропуск {filename + fil}.")
                     continue
 
             if any('catalog' in n for n in names):
-                catalog_name = next(itm for itm in names if itm[0] == fil.replace('.', ''))
+                catalog_name = next(item for item in names if item[0] == fil.replace('.', ''))
                 self.copy(filename, path_file, catalog_name[1])
             elif any(fil.replace('.', '') in n for n in names):
-                catalog_name = next(itm for itm in names if itm[0] == fil.replace('.', ''))
+                catalog_name = next(item for item in names if item[0] == fil.replace('.', ''))
                 self.copy(filename + fil, path_file, catalog_name[1])
             elif any('*' in n for n in names):
                 if os.path.isdir(Path(path_file) / (filename + fil)): # TODO
@@ -108,13 +102,10 @@ class sorter:
     def main(self, system):
         if system == "nt":
             for catalog in self.catalogs:
-                # достаем переменные из конфига
                 path_file, files, ignore, names = self.validate_options(catalog)
-                # создаем список файлов и удаляем ignore каталоги, созданные каталоги
-                files_catalogs = [os.path.splitext(n) for n in os.listdir(path_file)]
-                files_catalogs = self.remove_ignore_files(ignore, files_catalogs, catalog)
-                files_catalogs = self.remove_names_catalogs(names, files_catalogs)
-                # сортируем и копируем
-                self.sort(files_catalogs, path_file, files, names)
+                content_folder = [os.path.splitext(n) for n in os.listdir(path_file)]
+                content_folder = self.apply_ignore(ignore, content_folder, catalog)
+                content_folder = self.apply_names(names, content_folder)
+                self.sort(content_folder, path_file, files, names)
         else:
             pass

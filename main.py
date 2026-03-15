@@ -6,24 +6,27 @@ from pathlib import Path
 import sys
 import locale
 
-from src.config import config
-from src.sorter import sorter
+from src.config import Config
+from src.sorter import Sorter
 from src.languages import LANGUAGE
 
 import shutil
         
+class Cli:
+    def __init__(self):
+        pass
 
-class daemon:
+class Daemon:
     def __init__(self): pass
 
-class tray:
+class Tray:
     def __init__(): pass
 
 def main():
     if os.name == 'nt':
-        conf = config()
+        conf = Config()
         catalogs, settings, language = conf.run()
-        sort = sorter(catalogs, settings, language=language)
+        sort = Sorter(catalogs, settings, language=language)
         sort.main('nt')
     else: # Линукс
         pass

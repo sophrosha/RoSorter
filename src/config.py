@@ -6,15 +6,8 @@ from pathlib import Path
 
 from src.languages import LANGUAGE
 
-'''
-    Обработчик конфигурации
-
-    Создает конфиг если его нету, 
-    проверяет конфиг и дальше выдает спарсенные значения
-'''
-
-class config:
-    def __init__(self, language='en_US'): # инициализация
+class Config:
+    def __init__(self, language='en_US'):
         self.language = language
         if os.name == 'nt':
             self.username = os.environ.get('USERNAME')
@@ -25,10 +18,10 @@ class config:
             self.filepath = self.home_path / "Documents/Projects/RoSorter-1/src/example.yaml"
             #self.example_config = self.sys_path / "RoSorter/src/example.yaml"
             self.example_config = self.home_path / "Documents/Projects/RoSorter-1/src/example.yaml"
-        else: # Линукс
+        else:
             pass
 
-    def validate_config(self): # валидация конфига
+    def validate_config(self):
         if os.name == 'nt':
             username = os.environ.get("USERNAME")
             system = os.name
@@ -43,7 +36,7 @@ class config:
                     print(LANGUAGE[self.language]['config_please_set_config'])
                     print(LANGUAGE[self.language]['exit'])
                     sys.exit()
-        else: # Линукс
+        else:
             pass
                     
     def create_config(self, system):
@@ -55,17 +48,15 @@ class config:
             except Exception as error:
                 print(LANGUAGE[self.language]['fail'].format(error))
                 sys.exit()
-        else: # Линукс
+        else:
             pass
 
     def parser(self):
         catalogs = {}
         settings = {}
         with open(self.filepath, 'r', encoding='utf-8') as f:
-            # Защищенная загрузка конфигурации
             config = yaml.safe_load(f)
 
-            # Проверка наличия масивов settings, directories.
             cout = 0
             for key, _ in config.items():
                 if key in {'settings', 'directories'}:
@@ -77,7 +68,6 @@ class config:
                 print(LANGUAGE[self.language]['missing_settings_directories'])
                 sys.exit()
 
-            # Парсинг settings
             for key, value in config['settings'].items():
                 if key in {'logs', 'daemon', 'timeout', 'gui', 'silent'}: 
                     settings[key] = value
@@ -87,7 +77,6 @@ class config:
                     print(LANGUAGE[self.language]['found_error_option'].format(key))
                     sys.exit()
 
-            # Парсинг directories
             for directory in config['directories']:
                 catalogs[directory] = {}
                 # Проверка значений, если есть неопределенное значение то выход
@@ -98,7 +87,6 @@ class config:
                         print(LANGUAGE[self.language]['found_error_option_dir'].format(key, directory))
                         sys.exit()
             
-            # Валидация path
             for catalog in catalogs:
                 if not os.path.isdir(catalogs[catalog]['path']):
                     print(LANGUAGE[self.language]['missing_directory'].format(catalogs[catalog]['path']))
@@ -115,8 +103,7 @@ class config:
 
         return catalogs, settings, language
                 
-    def run(self): # хранение конфигурации внутри()
-        # Валидация конфигурации
+    def run(self):
         self.validate_config()
         catalogs, settings, language = self.parser()
         return catalogs, settings, language
