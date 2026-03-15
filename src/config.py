@@ -51,52 +51,64 @@ class Config:
         else:
             pass
 
-    def parser(self):
+    def contains_values(self, config):
+        cout = 0
+        for key, _ in config.items():
+            if key in {'settings', 'directories'}:
+                cout += 1
+            else:
+                print(LANGUAGE[self.language]['found_error_option'].format(key))
+                sys.exit()
+        if cout != 2:
+            print(LANGUAGE[self.language]['missing_settings_directories'])
+            sys.exit()
+        return None
+
+    def validate_settings(self, config, settings):
+        for key, value in config['settings'].items():
+            if key in {'logs', 'daemon', 'timeout', 'gui', 'silent'}: 
+                settings[key] = value
+            elif key in 'language':
+                language = value
+            else:
+                print(LANGUAGE[self.language]['found_error_option'].format(key))
+                sys.exit()
+        return language, settings
+
+    def validate_directories(self, config, catalogs):
+        for directory in config['directories']:
+            catalogs[directory] = {}
+            # Проверка значений, если есть неопределенное значение то выход
+            for key, value in config['directories'][directory].items():
+                if key in {'path', 'files', 'names', 'ignore'}: 
+                    catalogs[directory][key] = value
+                else:
+                    print(LANGUAGE[self.language]['found_error_option_dir'].format(key, directory))
+                    sys.exit()
+        return catalogs
+
+    def validate_catalogs(self, catalogs):
+        for catalog in catalogs:
+            if not os.path.isdir(catalogs[catalog]['path']):
+                print(LANGUAGE[self.language]['missing_directory'].format(catalogs[catalog]['path']))
+                answer = input(LANGUAGE[self.language]['create_catalog'] + ' ')
+                if answer.lower() in 'y':
+                    print(LANGUAGE[self.language]['creating_catalog'])
+                    os.mkdir(catalogs[catalog]['path'])
+                else:
+                    print(LANGUAGE[self.language]['exit'])
+                    sys.exit()
+
+    def main(self):
         catalogs = {}
         settings = {}
         with open(self.filepath, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
 
-            cout = 0
-            for key, _ in config.items():
-                if key in {'settings', 'directories'}:
-                    cout += 1
-                else:
-                    print(LANGUAGE[self.language]['found_error_option'].format(key))
-                    sys.exit()
-            if cout != 2:
-                print(LANGUAGE[self.language]['missing_settings_directories'])
-                sys.exit()
-
-            for key, value in config['settings'].items():
-                if key in {'logs', 'daemon', 'timeout', 'gui', 'silent'}: 
-                    settings[key] = value
-                elif key in 'language':
-                    language = value
-                else:
-                    print(LANGUAGE[self.language]['found_error_option'].format(key))
-                    sys.exit()
-
-            for directory in config['directories']:
-                catalogs[directory] = {}
-                # Проверка значений, если есть неопределенное значение то выход
-                for key, value in config['directories'][directory].items():
-                    if key in {'path', 'files', 'names', 'ignore'}: 
-                        catalogs[directory][key] = value
-                    else:
-                        print(LANGUAGE[self.language]['found_error_option_dir'].format(key, directory))
-                        sys.exit()
-            
-            for catalog in catalogs:
-                if not os.path.isdir(catalogs[catalog]['path']):
-                    print(LANGUAGE[self.language]['missing_directory'].format(catalogs[catalog]['path']))
-                    answer = input(LANGUAGE[self.language]['create_catalog'] + ' ')
-                    if answer.lower() in 'y':
-                        print(LANGUAGE[self.language]['creating_catalog'])
-                        os.mkdir(catalogs[catalog]['path'])
-                    else:
-                        print(LANGUAGE[self.language]['exit'])
-                        sys.exit()
+            self.contains_values(config)
+            settings = self.validate_settings(config, settings)
+            catalogs = self.validate_directories(config, catalogs)
+            self.validate_catalogs(catalogs)
         
         if not language in settings:
             language = 'en-US'
@@ -105,5 +117,5 @@ class Config:
                 
     def run(self):
         self.validate_config()
-        catalogs, settings, language = self.parser()
+        catalogs, settings, language = self.main()
         return catalogs, settings, language
