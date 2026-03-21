@@ -7,15 +7,16 @@ from pathlib import Path
 from src.languages import LANGUAGE
 
 class Config:
-    def __init__(self, language='en_US'):
+    def __init__(self, language='en-US', custom_config=None):
         self.language = language
+        self.custom_config = custom_config
         if os.name == 'nt':
             self.username = os.environ.get('USERNAME')
             self.home_path = Path(f"C:/Users/{self.username}")
             self.sys_path = Path("C:/Program Files")
 
             #self.filepath = self.home_path / "AppData/Roaming/rosorter.yaml"
-            self.filepath = self.home_path / "Documents/Projects/RoSorter-1/src/example.yaml"
+            self.filepath = self.home_path / "Documents/Projects/RoSorter-1/src/example.yaml" if self.custom_config == None else self.custom_config
             #self.example_config = self.sys_path / "RoSorter/src/example.yaml"
             self.example_config = self.home_path / "Documents/Projects/RoSorter-1/src/example.yaml"
         else:
@@ -23,7 +24,6 @@ class Config:
 
     def validate_config(self):
         if os.name == 'nt':
-            username = os.environ.get("USERNAME")
             system = os.name
             if os.path.exists(self.filepath):
                 return 1
@@ -33,7 +33,7 @@ class Config:
                 config = self.create_config(system)
                 if config == 1:
                     print(LANGUAGE[self.language]['config_created'].format(self.filepath))
-                    print(LANGUAGE[self.language]['config_please_set_config'])
+                    print(LANGUAGE[self.language]['please_set_config'])
                     print(LANGUAGE[self.language]['exit'])
                     sys.exit()
         else:
@@ -110,12 +110,13 @@ class Config:
             catalogs = self.validate_directories(config, catalogs)
             self.validate_catalogs(catalogs)
         
-        if not language in settings:
+        if not self.language in settings:
             language = 'en-US'
 
         return catalogs, settings, language
                 
     def run(self):
-        self.validate_config()
+        if not self.custom_config == None:
+            self.validate_config()
         catalogs, settings, language = self.main()
         return catalogs, settings, language

@@ -1,35 +1,15 @@
-import os
-#import daemon
-import pystray
-import tkinter
-from pathlib import Path
-import sys
-import locale
-
-from src.config import Config
-from src.sorter import Sorter
-from src.languages import LANGUAGE
-
-import shutil
-        
-class Cli:
-    def __init__(self):
-        pass
+from src.cli import Cli
 
 class Daemon:
-    def __init__(self): pass
+    def __init__(self): 
+        pass
 
 class Tray:
     def __init__(): pass
 
 def main():
-    if os.name == 'nt':
-        conf = Config()
-        catalogs, settings, language = conf.run()
-        sort = Sorter(catalogs, settings, language=language)
-        sort.main('nt')
-    else: # Линукс
-        pass
-    
+    general = Cli()
+    general.main()
+
 if __name__ == "__main__": 
     main()

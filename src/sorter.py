@@ -24,16 +24,8 @@ class Sorter:
                 added_opts.append(option)
         path_file = self.catalogs[catalog]['path']
         files = self.catalogs[catalog]['files']
-
-        if 'names' in added_opts:
-            names = self.catalogs[catalog]['names']
-        else:
-            names = None
-
-        if 'ignore' in added_opts:
-            ignore = self.catalogs[catalog]['ignore']
-        else:
-            ignore = None
+        names = self.catalogs[catalog]['names'] if 'names' in added_opts else None
+        ignore = self.catalogs[catalog]['ignore'] if 'ignore' in added_opts else None
 
         names1 = []
         for el in names:

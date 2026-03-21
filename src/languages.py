@@ -1,4 +1,11 @@
 LANGUAGE = {
+    'commands' : {
+        'help': 'A sorter with config created in Python',
+        'sort': 'Start sorting with config',
+        'gui': 'Open window program for setting config',
+        'create': 'Create new config file',
+        'another_config': 'Select another config'
+    },
     'ru-RU': {
         'mission_option': '[RoSorter] !: Ошибка, отсуствует значение {}. Выход',
         'found_ignore': '[RoSorter] : Найден ignore в {}, убираем файлы.',

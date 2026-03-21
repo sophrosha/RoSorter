@@ -1,0 +1,21 @@
+settings:
+  logs: false # вкл логов в каталоге rosorter. logs.txt
+  daemon: false # Включение демона(будет находится в трее)
+  timeout: "60m" # время сортировки(0m сортировка ручная по требованию юзера)
+  gui: false # Использование диалогов в tk
+  silent: true # Работа в тихую без вывода уведов об сортировке
+  language: "ru-RU" # Настройка языка
+
+directories: # Указание всех директории
+  downloads: # Название каталога
+    path: 'C:\Users\sophrosha\Downloads' # Путь
+    files: ["png", "jpg", "pdf", "directory", "exe", "torrent", "zip", "rar"] # То что парсим
+    names: # Указываем каталоги(обязательно)
+    # - расширение:каталог
+      - "*": "*"
+      - "pdf": "Docs"
+      - "rar": "Archives"
+      - "exe": "Executables"
+      - "torrent": "Torrents"
+    ignore:
+      - "Telegram Desktop"
