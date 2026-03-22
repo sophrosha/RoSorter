@@ -1,11 +1,13 @@
 import shutil
-from src.languages import LANGUAGE
+from src.languages import Language
 import sys, os
 from pathlib import Path
 
 class Sorter:
-    def __init__(self, catalogs, settings, language='ru-RU'):
-        self.language = language
+    def __init__(self, catalogs, settings, language):
+        lang = Language(language)
+        self.printf = lang.printf
+        
         self.catalogs = catalogs
         self.settings = settings
 
@@ -18,7 +20,7 @@ class Sorter:
                 if needed == False:
                     continue
                 else:
-                    print(LANGUAGE[self.language]['missing_option'].format(option))
+                    self.printf('missing_option', option)
                     sys.exit()
             elif needed == False:
                 added_opts.append(option)
@@ -37,12 +39,12 @@ class Sorter:
     # при наличии ignore убираем файлы находящиеся в ignore с списка
     def apply_ignore(self, ignore, content_folder, catalog):
         if ignore != None:
-            print(LANGUAGE[self.language]['found_ignore'].format(catalog))
+            self.printf('found_ignore', catalog)
             for name, file_extension in content_folder:
                 if name + file_extension in ignore:
-                    print(LANGUAGE[self.language]['delete_ignore'].format(name + file_extension))
+                    self.printf('delete_ignore', name + file_extension)
                     content_folder.remove((name, file_extension))
-                    print(LANGUAGE[self.language]['deleted_ignore'].format(name + file_extension))
+                    self.printf('deleted_ignore', name + file_extension)
         return content_folder
 
     def apply_names(self, names, content_folder):
@@ -58,20 +60,20 @@ class Sorter:
         path_file = Path(path) / file_name
 
         if not os.path.isdir(path_dir):
-            print(f"[RoSorter] : Отсуствует каталог для {file_name}. Создаю")
+            self.printf('found_error_catalog', file_name)
             os.mkdir(path_dir)
             
         try:
             shutil.move(path_file, path_dir)
         except PermissionError as e:
-            print(f"Файл занят процессом, пропуск")
+            self.printf('file_process', file_name)
             return None
     
     def sort(self, content_folder, path_file, files, names):
         for filename, fil in content_folder:
             if '*' in files:
                 if len(files) > 1:
-                    print("[RoSorter] ?: Найдено несколько расширений кроме *. Пропуск.")
+                    self.printf('some_extensions_files')
                 elif not fil.replace('.', '') in files:
                     continue
 
@@ -87,7 +89,6 @@ class Sorter:
                 else:
                     self.copy(filename + fil, path_file, fil.replace('.', ''))
             else:
-                print(f"[RoSorter] : {filename + fil} отсуствует в names. Добавьте * для добавления всех файлов по своим каталогам")
                 continue
 
     # Основная функция
@@ -99,5 +100,6 @@ class Sorter:
                 content_folder = self.apply_ignore(ignore, content_folder, catalog)
                 content_folder = self.apply_names(names, content_folder)
                 self.sort(content_folder, path_file, files, names)
+                self.printf('succes_sorting')
         else:
             pass

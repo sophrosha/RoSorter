@@ -4,11 +4,14 @@ import os
 import shutil
 from pathlib import Path
 
-from src.languages import LANGUAGE
+from src.languages import Language
 
 class Config:
-    def __init__(self, language='en-US', custom_config=None):
-        self.language = language
+    def __init__(self, language, custom_config=None):
+        lang = Language(language)
+        self.printf = lang.printf
+        self.inputf = lang.inputf
+
         self.custom_config = custom_config
         if os.name == 'nt':
             self.username = os.environ.get('USERNAME')
@@ -16,9 +19,9 @@ class Config:
             self.sys_path = Path("C:/Program Files")
 
             #self.filepath = self.home_path / "AppData/Roaming/rosorter.yaml"
-            self.filepath = self.home_path / "Documents/Projects/RoSorter-1/src/example.yaml" if self.custom_config == None else self.custom_config
+            self.filepath = self.home_path / "Documents/Projects/RoSorter-1/assets/example.yaml" if self.custom_config == None else self.custom_config
             #self.example_config = self.sys_path / "RoSorter/src/example.yaml"
-            self.example_config = self.home_path / "Documents/Projects/RoSorter-1/src/example.yaml"
+            self.example_config = self.home_path / "Documents/Projects/RoSorter-1/assets/example.yaml"
         else:
             pass
 
@@ -28,13 +31,13 @@ class Config:
             if os.path.exists(self.filepath):
                 return 1
             else:
-                print(LANGUAGE[self.language]['config_not_found'])
-                print(LANGUAGE[self.language]['config_create'])
+                self.printf('config_not_found')
+                self.printf('config_create')
                 config = self.create_config(system)
                 if config == 1:
-                    print(LANGUAGE[self.language]['config_created'].format(self.filepath))
-                    print(LANGUAGE[self.language]['please_set_config'])
-                    print(LANGUAGE[self.language]['exit'])
+                    self.printf('config_created', self.filepath)
+                    self.printf('please_set_config')
+                    self.printf('exit')
                     sys.exit()
         else:
             pass
@@ -46,7 +49,7 @@ class Config:
                 shutil.copy2(self.example_config, self.filepath)
                 return 1
             except Exception as error:
-                print(LANGUAGE[self.language]['fail'].format(error))
+                self.printf('fail', error)
                 sys.exit()
         else:
             pass
@@ -57,10 +60,10 @@ class Config:
             if key in {'settings', 'directories'}:
                 cout += 1
             else:
-                print(LANGUAGE[self.language]['found_error_option'].format(key))
+                self.printf('found_error_option', key)
                 sys.exit()
         if cout != 2:
-            print(LANGUAGE[self.language]['missing_settings_directories'])
+            self.printf('missing_settings_directories')
             sys.exit()
         return None
 
@@ -71,7 +74,7 @@ class Config:
             elif key in 'language':
                 language = value
             else:
-                print(LANGUAGE[self.language]['found_error_option'].format(key))
+                self.printf('found_error_option', key)
                 sys.exit()
         return language, settings
 
@@ -83,20 +86,19 @@ class Config:
                 if key in {'path', 'files', 'names', 'ignore'}: 
                     catalogs[directory][key] = value
                 else:
-                    print(LANGUAGE[self.language]['found_error_option_dir'].format(key, directory))
+                    self.printf('found_error_option_dir', key, directory)
                     sys.exit()
         return catalogs
 
     def validate_catalogs(self, catalogs):
         for catalog in catalogs:
             if not os.path.isdir(catalogs[catalog]['path']):
-                print(LANGUAGE[self.language]['missing_directory'].format(catalogs[catalog]['path']))
-                answer = input(LANGUAGE[self.language]['create_catalog'] + ' ')
+                answer = self.inputf('create_catalog')
                 if answer.lower() in 'y':
-                    print(LANGUAGE[self.language]['creating_catalog'])
+                    self.printf('creating_catalog')
                     os.mkdir(catalogs[catalog]['path'])
                 else:
-                    print(LANGUAGE[self.language]['exit'])
+                    self.printf('exit')
                     sys.exit()
 
     def main(self):

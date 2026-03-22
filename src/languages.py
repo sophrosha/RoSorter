@@ -1,4 +1,7 @@
 LANGUAGE = {
+    'other_messages': {
+        'another_language': '[RoSorter] : Language is invalid. please set one of the languages on README.md.'
+    },
     'commands' : {
         'help': 'A sorter with config created in Python',
         'sort': 'Start sorting with config',
@@ -24,7 +27,11 @@ LANGUAGE = {
         'missing_directory': '[RoSorter] !: Ошибка, не существует данного каталога в {}',
         'create_catalog': '[RoSorter] : Создать каталог? Y/n >',
         'creating_catalog': '[RoSorter] : Создаю каталог',
-        'found_language': '[RoSorted] : Найден язык: {}, ставим'
+        'found_language': '[RoSorted] : Найден язык: {}, ставим',
+        'found_error_catalog': '[RoSorter] : Отсуствует каталог для {}. Создаю',
+        'file_process': '[RoSorter] : Файл занят процессом, пропуск.',
+        'some_extensions_files': '[RoSorter] ?: Найдено несколько расширений кроме *. Пропуск.',
+        'succes_sorting': '[RoSorter] : Успешно отсортировано {}!'
     },
     'en-US': {
         'mission_option': '[RoSorter] !: Error, missing option {}. Exit',
@@ -44,6 +51,32 @@ LANGUAGE = {
         'missing_directory': '[RoSorter] !: Error, not found catalog on {}',
         'create_catalog': '[RoSorter] : Create catalog? Y/n > ',
         'creating_catalog': '[RoSorter] : Creating catalog',
-        'found_language': '[RoSorted] : Found language: {}, setting' 
+        'found_language': '[RoSorted] : Found language: {}, setting',
+        'found_error_catalog': '[RoSorter] : Directory for {} is missing. Creating',
+        'file_process': '[RoSorter] : File is busy with process, skip.',
+        'some_extensions_files': '[RoSorter] ?: Several extensions were found except *. Skip.',
+        'succes_sorting': '[RoSorter] : Successfully sorted {}!'
     }
 }
+
+class Language:
+    def __init__(self, language='en-US'):
+        self.language = language
+
+    def printf(self, code_name, *args):
+        try:
+            if args:
+                print(LANGUAGE[self.language][code_name].format(*args))
+            else:
+                print(LANGUAGE[self.language][code_name])
+        except KeyError:
+            print(LANGUAGE['other_messages']['another_language'])
+    
+    def inputf(self, code_name):
+        try:
+            input(LANGUAGE[self.language][code_name])
+        except KeyError:
+            print(LANGUAGE['other_messages']['another_language'])
+
+    def code_return(self, code_name):
+        return LANGUAGE[self.language][code_name]

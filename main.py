@@ -4,8 +4,11 @@ class Daemon:
     def __init__(self): 
         pass
 
+
+import pystray
 class Tray:
-    def __init__(): pass
+    def __init__(self): 
+        pass
 
 def main():
     general = Cli()
