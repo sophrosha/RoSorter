@@ -7,6 +7,7 @@ import argparse
 
 class Cli(CliCommands, CliHandlers):
     def __init__(self):
+        self.parser = None
         self.lang = TextLoader('commands', logging=True)
         self.code_return = self.lang.code_return
 

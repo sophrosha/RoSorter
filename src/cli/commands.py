@@ -1,4 +1,13 @@
+from argparse import ArgumentParser
+from typing import Callable
+
 class CliCommands:
+    parser: ArgumentParser
+    code_return: Callable
+    sort: Callable
+    gui: Callable
+    create: Callable
+
     def commands(self):
         command = self.parser
         subparser = command.add_subparsers(

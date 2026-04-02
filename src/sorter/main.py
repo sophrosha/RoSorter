@@ -1,12 +1,12 @@
-from src.sorter.applyes import Applyes
+from src.sorter.applyes import Applies
 from src.sorter.copy import Copy
-from src.sorter.options_validate import optionsValidate
+from src.sorter.options_validate import OptionsValidate
 from src.sorter.sort import Sort
 
 from src.language.text_loader import TextLoader
 import os
 
-class Sorter(Applyes, Copy, optionsValidate, Sort):
+class Sorter(Applies, Copy, OptionsValidate, Sort):
     def __init__(self, catalogs, settings, language):
         lang = TextLoader(language)
         self.printf = lang.printf
@@ -23,6 +23,6 @@ class Sorter(Applyes, Copy, optionsValidate, Sort):
                 content_folder = self.apply_ignore(ignore, content_folder, catalog)
                 content_folder = self.apply_names(names, content_folder)
                 self.sort(content_folder, path_file, files, names)
-                self.printf('succes_sorting', catalog)
+                self.printf('success_sorting', catalog)
         else:
             pass

@@ -1,7 +1,13 @@
 import sys, os
+from typing import Callable
 
 class ConfigOptionValidate:
+    printf: Callable
+    inputf: Callable
+
     def validate_settings(self, config, settings):
+        language = None
+
         for key, value in config['settings'].items():
             if key in {'logs', 'daemon', 'timeout', 'gui', 'silent'}: 
                 settings[key] = value

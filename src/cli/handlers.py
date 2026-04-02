@@ -1,20 +1,22 @@
 from src.sorter.main import Sorter
 from src.config.main import Config
 
-from pathlib import Path
-
 class CliHandlers:
-    def sort(self, args):
+    @staticmethod
+    def sort(args):
         conf = Config('en-US', custom_config=args.config) if args.config else Config('en-US')
         catalogs, settings, language = conf.run()
-        
+
+        if settings[1]['daemon']:
+            pass
+
         sort = Sorter(catalogs, settings, language)
         sort.main('nt')
 
-        self.lang.save_log(Path('C:\\Users') / 'sophrosha\\Documents\\Projects\\RoSorter-1')
-
-    def gui(self, args):
+    @staticmethod
+    def gui():
         print('Under Construction')
 
-    def create(self, args):
+    @staticmethod
+    def create():
         print('Under Construction')

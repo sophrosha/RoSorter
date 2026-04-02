@@ -18,7 +18,7 @@ class TextLoader:
 
             print(message)
 
-            if self.logging == True:
+            if self.logging:
                 self.log_messages.append(message)
         except KeyError:
             print(LANGUAGE['other_messages']['another_language'])
@@ -28,7 +28,7 @@ class TextLoader:
             message = LANGUAGE[self.language][code_name] + ' '
             inp = input(message)
 
-            if self.logging == True:
+            if self.logging:
                 self.log_messages.append(inp)
             return inp
         except KeyError:

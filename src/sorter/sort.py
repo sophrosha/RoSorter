@@ -1,7 +1,12 @@
 from pathlib import Path
 import os
 
+from typing import Callable
+
 class Sort:
+    printf: Callable[[str], None]
+    copy: Callable[[str, str, str], None]
+
     def sort(self, content_folder, path_file, files, names):
         for filename, fil in content_folder:
             if '*' in files:

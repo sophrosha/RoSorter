@@ -1,7 +1,14 @@
 import sys, os
 import shutil
 
+from typing import Callable
+from pathlib import Path
+
 class ValidateFileConfig:
+    filepath: str
+    printf: Callable
+    example_config: Path
+
     def validate_config(self):
         if os.name == 'nt':
             system = os.name
@@ -16,8 +23,10 @@ class ValidateFileConfig:
                     self.printf('please_set_config')
                     self.printf('exit')
                     sys.exit()
+                else:
+                    return None
         else:
-            pass
+            return None
                     
     def create_config(self, system):
         if system == 'nt':
@@ -29,17 +38,17 @@ class ValidateFileConfig:
                 self.printf('fail', error)
                 sys.exit()
         else:
-            pass
+            return None
 
     def contains_values(self, config):
-        cout = 0
+        count = 0
         for key, _ in config.items():
             if key in {'settings', 'directories'}:
-                cout += 1
+                count += 1
             else:
                 self.printf('found_error_option', key)
                 sys.exit()
-        if cout != 2:
+        if count != 2:
             self.printf('missing_settings_directories')
             sys.exit()
         return None

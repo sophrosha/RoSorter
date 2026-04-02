@@ -1,6 +1,10 @@
-class Applyes:
+from typing import Callable
+
+class Applies:
+    printf: Callable
+
     def apply_ignore(self, ignore, content_folder, catalog):
-        if ignore != None:
+        if ignore is not None:
             self.printf('found_ignore', catalog)
             for name, file_extension in content_folder:
                 if name + file_extension in ignore:
@@ -9,8 +13,9 @@ class Applyes:
                     self.printf('deleted_ignore', name + file_extension)
         return content_folder
 
-    def apply_names(self, names, content_folder):
-        if names != None:
+    @staticmethod
+    def apply_names(names, content_folder):
+        if names is not None:
             for filename, fil in content_folder:
                 if any(filename in n for n in names):
                     content_folder.remove((filename, fil))

@@ -21,7 +21,7 @@ class Config(ValidateFileConfig, ConfigOptionValidate):
             self.sys_path = Path("C:/Program Files")
 
             #self.filepath = self.home_path / "AppData/Roaming/rosorter.yaml"
-            self.filepath = self.home_path / "Documents/Projects/RoSorter-1/assets/test_config.yaml" if self.custom_config == None else self.custom_config
+            self.filepath = self.home_path / "Documents/Projects/RoSorter-1/assets/test_config.yaml" if self.custom_config is None else self.custom_config
             #self.example_config = self.sys_path / "RoSorter/src/example.yaml"
             self.example_config = self.home_path / "Documents/Projects/RoSorter-1/assets/test_config.yaml"
         else:
@@ -37,14 +37,12 @@ class Config(ValidateFileConfig, ConfigOptionValidate):
             settings = self.validate_settings(config, settings)
             catalogs = self.validate_directories(config, catalogs)
             self.validate_catalogs(catalogs)
-        
-        if not self.language in settings:
-            language = 'en-US'
 
+        language = 'en-US' if not self.language in settings else self.language
         return catalogs, settings, language
                 
     def run(self):
-        if not self.custom_config == None:
+        if not self.custom_config is None:
             self.validate_config()
         catalogs, settings, language = self.main()
         return catalogs, settings, language

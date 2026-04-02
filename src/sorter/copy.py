@@ -2,7 +2,11 @@ from pathlib import Path
 import shutil
 import os
 
+from typing import Callable
+
 class Copy:
+    printf: Callable
+
     def copy(self, file_name, path, name_folder):
         path_dir = Path(path) / name_folder
         path_file = Path(path) / file_name
@@ -13,6 +17,6 @@ class Copy:
             
         try:
             shutil.move(path_file, path_dir)
-        except PermissionError as e:
+        except PermissionError:
             self.printf('file_process', file_name)
             return None
