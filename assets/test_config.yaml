@@ -8,7 +8,7 @@ settings:
 
 directories: # Указание всех директории
   downloads: # Название каталога
-    path: 'C:\Users\user\Downloads' # Путь
+    path: 'C:\Users\sophrosha\Download' # Путь
     files: ["png", "jpg", "pdf", "directory", "exe", "torrent", "zip", "rar"] # То что парсим
     names: # Указываем каталоги(обязательно)
     # - расширение:каталог
@@ -19,14 +19,3 @@ directories: # Указание всех директории
       - "torrent": "Torrents"
     ignore:
       - "Telegram Desktop"
-
-  documents:
-    path: 'C:\Users\user\Documents'
-    files: ["*"] # Все парсим
-    names:
-      - "pdf": "Files"
-      - "*": "*" # Все парсим по своим каталогам(conf = каталог будет conf)
-
-
-# names: "*": "*" Берем расширение файла, делаем его с заглавной и создаем каталог и перекидываем туда файлы. Для всех расширении
-# names: "pdf": "*" Берем расширение файла, и делаем так же как в первом варианте. Но берем уже название расширения()
