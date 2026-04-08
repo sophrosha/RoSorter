@@ -31,7 +31,8 @@ LANGUAGE = {
         'found_error_catalog': '[RoSorter] : Отсуствует каталог для {}. Создаю',
         'file_process': '[RoSorter] : Файл занят процессом, пропуск.',
         'some_extensions_files': '[RoSorter] ?: Найдено несколько расширений кроме *. Пропуск.',
-        'success_sorting': '[RoSorter] : Успешно отсортировано {}!'
+        'moving_file': 'Перемещение {}',
+        'moving_catalog': 'Сортировка {}'
     },
     'en-US': {
         'mission_option': '[RoSorter] !: Error, missing option {}. Exit',
@@ -55,6 +56,7 @@ LANGUAGE = {
         'found_error_catalog': '[RoSorter] : Directory for {} is missing. Creating',
         'file_process': '[RoSorter] : File is busy with process, skip.',
         'some_extensions_files': '[RoSorter] ?: Several extensions were found except *. Skip.',
-        'success_sorting': '[RoSorter] : Successfully sorted {}!'
+        'moving_file': 'Moving {}',
+        'moving_catalog': 'Sorting {}',
     }
 }

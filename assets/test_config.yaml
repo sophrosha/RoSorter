@@ -8,14 +8,10 @@ settings:
 
 directories: # Указание всех директории
   downloads: # Название каталога
-    path: 'C:\Users\sophrosha\Download' # Путь
-    files: ["png", "jpg", "pdf", "directory", "exe", "torrent", "zip", "rar"] # То что парсим
+    path: 'C:\Users\sophrosha\Dwlnd' # Путь
+    files: ["docx", "pptx", "bmp", "txt", "zip", "xlsx"] # То что парсим
     names: # Указываем каталоги(обязательно)
     # - расширение:каталог
-      - "*": "*"
-      - "pdf": "Docs"
-      - "rar": "Archives"
-      - "exe": "Executables"
-      - "torrent": "Torrents"
-    ignore:
-      - "Telegram Desktop"
+      #- "*": "*"
+      - "docx": "Docs"
+      - "zip": "Archives"

@@ -34,16 +34,20 @@ class TextLoader:
         except KeyError:
             print(LANGUAGE['other_messages']['another_language'])
 
-    def code_return(self, code_name):
+    def code_return(self, code_name, *args):
         try:
-            return LANGUAGE[self.language][code_name]
+            if args:
+                return LANGUAGE[self.language][code_name].format(*args)
+            else:
+                return LANGUAGE[self.language][code_name]
         except KeyError:
             print(LANGUAGE['other_messages']['another_language'])
 
-    def save_log(self, sys_path=(Path('C:\\Program Files') / 'RoSorter')):
-        date = datetime.now()
-        log = date.strftime("%d-%m-%Y_%H-%M-log.txt")
-        with open(sys_path / log, 'w', encoding='utf-8') as f:
-            for message in self.log_messages:
-                print(f'writing {message}')
-                f.write(f"{message}\n")
+    # TODO
+    #def save_log(self, sys_path=(Path('C:\\Program Files') / 'RoSorter')):
+    #    date = datetime.now()
+    #    log = date.strftime("%d-%m-%Y_%H-%M-log.txt")
+    #    with open(sys_path / log, 'w', encoding='utf-8') as f:
+    #        for message in self.log_messages:
+    #            print(f'writing {message}')
+    #            f.write(f"{message}\n")

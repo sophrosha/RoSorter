@@ -12,12 +12,12 @@ class OptionsValidate:
         added_opts = []
         for option, needed in options.items():
             if option not in self.catalogs[catalog]:
-                if needed in False:
+                if not needed:
                     continue
                 else:
                     self.printf('missing_option', option)
                     sys.exit()
-            elif needed in False:
+            elif not needed:
                 added_opts.append(option)
         path_file = self.catalogs[catalog]['path']
         files = self.catalogs[catalog]['files']
