@@ -32,7 +32,9 @@ LANGUAGE = {
         'file_process': '[RoSorter] : Файл занят процессом, пропуск.',
         'some_extensions_files': '[RoSorter] ?: Найдено несколько расширений кроме *. Пропуск.',
         'moving_file': 'Перемещение {}',
-        'moving_catalog': 'Сортировка {}'
+        'moving_catalog': 'Сортировка {}',
+        'file_exists': '[RoSorter] : Файл не найден. Выход.',
+        'not_directory': '[RoSorter] : Не правильный путь к файлу. Выход.'
     },
     'en-US': {
         'mission_option': '[RoSorter] !: Error, missing option {}. Exit',
@@ -58,5 +60,7 @@ LANGUAGE = {
         'some_extensions_files': '[RoSorter] ?: Several extensions were found except *. Skip.',
         'moving_file': 'Moving {}',
         'moving_catalog': 'Sorting {}',
+        'file_exists': '[RoSorter] : File not found. Exit.',
+        'not_directory': '[RoSorter] : Incorrect file path. Exit.'
     }
 }

@@ -6,3 +6,8 @@
 .venv
 src/__pycache__
 __pycache__
+
+# Build Files
+build
+dist
+packaging/RoSorter.spec

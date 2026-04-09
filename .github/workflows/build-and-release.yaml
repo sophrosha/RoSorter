@@ -1,0 +1,55 @@
+name: Build & Release Installer (Dev)
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      - name: Install dependencies & Build
+        run: |
+          chmod +x packaging/actions_build.sh
+          packaging/actions_build.sh
+        env:
+          PYTHONIOENCODING: utf-8
+          CI: true
+
+      - name: Verify Build Output
+        run: |
+          echo "📂 Checking dist/RoSorter directory..."
+          ls -la dist/RoSorter/ || { echo "❌ ERROR: dist/RoSorter not found!"; exit 1; }
+          echo "🔍 Checking for config.yaml in dist root..."
+          [ -f "dist/RoSorter/config.yaml" ] && echo "✅ config.yaml successfully placed in dist root." || echo "⚠️ config.yaml missing from dist root."
+          find dist/ -type f -name "*.exe" | head -n 10
+
+      - name: Install NSIS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nsis
+
+      - name: Compile NSIS Installer
+        run: makensis -V4 packaging/script_installer.nsi
+
+      - name: Upload Installer to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: dev-build-${{ github.run_id }}
+          name: "Dev Build #${{ github.run_id }}"
+          draft: false
+          prerelease: true
+          generate_release_notes: true
+          files: |
+            packaging/RoSorter-Installer.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}

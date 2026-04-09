@@ -13,13 +13,28 @@
 - ~~Фикс ошибки копирования каталога на каталог~~ 
 - cli команда -> Разрабатывается
 - Поддержка Linux систем
-- сборка программы
+- сборка программы -> На стадии тестирования
 
 > [!WARNING]
 > Программа готова не полностью, многий функционал отсуствует.
 
+## Сборка
+```
+git clone https://github.com/sophrosha/RoSorter
+cd RoSorter/packaging
+
+# Windows
+.\app_build.bat
+
+# Linux-based
+chmod +x actions_build.sh
+./actions_build.sh
+
+cd ../dist/RoSorter
+```
+
 ## Установка
-```pwsh
+```
 git clone https://github.com/sophrosha/RoSorter
 cd RoSorter
 pip install -r requirements.txt

@@ -5,6 +5,7 @@ from src.language.text_loader import TextLoader
 
 import yaml
 import os
+import sys
 from pathlib import Path
 
 class Config(ValidateFileConfig, ConfigOptionValidate):
@@ -16,14 +17,17 @@ class Config(ValidateFileConfig, ConfigOptionValidate):
 
         self.custom_config = custom_config
         if os.name == 'nt':
-            self.username = os.environ.get('USERNAME')
-            self.home_path = Path(f"C:/Users/{self.username}")
-            self.sys_path = Path("C:/Program Files")
-
-            #self.filepath = self.home_path / "AppData/Roaming/rosorter.yaml"
-            self.filepath = self.home_path / "Documents/Projects/RoSorter-1/assets/test_config.yaml" if self.custom_config is None else self.custom_config
-            #self.example_config = self.sys_path / "RoSorter/src/example.yaml"
-            self.example_config = self.home_path / "Documents/Projects/RoSorter-1/assets/test_config.yaml"
+            try:
+                self.app_path = Path(os.environ.get('APPDATA'))
+                self.configuration = self.app_path / "RoSorter" / "config.yaml"
+                if not self.custom_config:
+                    self.configuration = Path(self.custom_config)
+            except FileNotFoundError:
+                self.printf('file_exists')
+                sys.exit()
+            except NotADirectoryError:
+                self.printf('not_directory')
+                sys.exit()
         else:
             pass
 
