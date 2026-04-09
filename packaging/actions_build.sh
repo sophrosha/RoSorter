@@ -27,7 +27,7 @@ pip install -r requirements.txt --quiet
 pip install pyinstaller --quiet
 
 echo "3/5 : Building with PyInstaller.."
-.veenv/bin/python3 -m PyInstaller --noconfirm --clean packaging/pyinstaller_build.spec
+pyinstaller --noconfirm --clean packaging/pyinstaller_build.spec
 
 echo "4/5 : Copying config.yaml to dist.."
 if [ -d "dist/RoSorter" ]; then
