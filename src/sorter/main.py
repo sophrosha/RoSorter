@@ -1,15 +1,15 @@
-from utility.src.sorter.applyes import Applies
-from utility.src.sorter.copy import Copy
-from utility.src.sorter.options_validate import OptionsValidate
-from utility.src.sorter.sort import Sort
+from src.sorter.applyes import Applies
+from src.sorter.copy import Copy
+from src.sorter.options_validate import OptionsValidate
+from src.sorter.sort import Sort
 
-from utility.src.language.text_loader import TextLoader
+from src.logging.logger import Logger
 import os
 from tqdm import tqdm
 
 class Sorter(Applies, Copy, OptionsValidate, Sort):
     def __init__(self, catalogs, settings, language):
-        lang = TextLoader(language)
+        lang = Logger(language)
         self.printf = lang.printf
         self.code_return = lang.code_return
         

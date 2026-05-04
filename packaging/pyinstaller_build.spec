@@ -1,6 +1,6 @@
 PROJECT_NAME = "RoSorter"
 LOGO_PATH = '../assets/logo.png'
-ENTRY_POINT = '../src/utility/main.py'
+ENTRY_POINT = '../main.py'
 
 a = Analysis(
     [ENTRY_POINT],

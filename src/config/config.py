@@ -108,7 +108,7 @@ class ValidateFileConfig:
             Path(self.configuration).parent.mkdir(parents=True, exist_ok=True)
             with open(self.configuration, 'w', encoding='utf-8') as f:
                 f.write("# RoSorter config\nsettings:\n  "
-                        "language: en-US\n  logs: true\n  "
+                        "logging: en-US\n  logs: true\n  "
                         "daemon: false\n  timeout: 30\n  "
                         "gui: false\n  silent: false\ndirectories:\n  "
                         "# Add your directories here\n")

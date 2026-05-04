@@ -6,17 +6,21 @@ class ConfigOptionValidate:
     inputf: Callable
 
     def validate_settings(self, config, settings):
-        language = None
+        key = None
+        try:
+            language = None
 
-        for key, value in config['settings'].items():
-            if key in {'logs', 'daemon', 'timeout', 'gui', 'silent'}: 
-                settings[key] = value
-            elif key in 'language':
-                language = value
-            else:
-                self.printf('found_error_option', key)
-                sys.exit()
-        return language, settings
+            for key, value in config['settings'].items():
+                if key == 'logging':
+                    language = value
+                elif key in {'logs', 'daemon', 'timeout', 'gui', 'silent'}:
+                    settings[key] = value
+                else:
+                    self.printf('mission_option', key)
+                    sys.exit()
+            return language, settings
+        except KeyError:
+            self.printf('option_not_found', key)
 
     def validate_directories(self, config, catalogs):
         for directory in config['directories']:

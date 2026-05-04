@@ -1,4 +1,4 @@
-from utility.src.cli.main import Cli
+from src.cli.main import Cli
 
 def main():
     general = Cli()

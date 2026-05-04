@@ -1,14 +1,14 @@
-from utility.src.config.config import ValidateFileConfig
-from utility.src.config.validates import ConfigOptionValidate
+from src.config.config import ValidateFileConfig
+from src.config.validates import ConfigOptionValidate
 
-from utility.src.language.text_loader import TextLoader
+from src.logging.logger import Logger
 
 import yaml
 
 class Config(ValidateFileConfig, ConfigOptionValidate):
     def __init__(self, language, custom_config=None):
         self.language = language
-        lang = TextLoader(language)
+        lang = Logger(language)
         self.printf = lang.printf
         self.inputf = lang.inputf
 
@@ -18,15 +18,20 @@ class Config(ValidateFileConfig, ConfigOptionValidate):
     def main(self):
         catalogs = {}
         settings = {}
+        config_lang = None
         with open(self.configuration, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
 
             self.contains_values(config)
-            settings = self.validate_settings(config, settings)
+            config_lang, settings = self.validate_settings(config, settings)
             catalogs = self.validate_directories(config, catalogs)
             self.validate_catalogs(catalogs)
 
-        language = 'en-US' if not self.language in settings else self.language
+        if config_lang:
+            language = config_lang
+        else:
+            language = self.language
+
         return catalogs, settings, language
                 
     def run(self):
