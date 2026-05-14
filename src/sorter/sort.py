@@ -14,23 +14,23 @@ class Sort:
         sort_bar = tqdm(content_folder, position=0)
         for filename, fil in sort_bar:
             sort_bar.set_description(self.code_return('moving_file', filename + fil))
-            if '*' in files:
-                if len(files) > 1:
-                    self.printf('some_extensions_files')
-                elif not fil.replace('.', '') in files:
-                    continue
+            extension = fil.replace('.', '')
+            if '*' in files and len(files) > 1:
+                self.printf('some_extensions_files')
+            elif '*' not in files and extension not in files:
+                continue
 
             if any('catalog' in n for n in names):
-                catalog_name = next(item for item in names if item[0] == fil.replace('.', ''))
+                catalog_name = next(item for item in names if item[0] == extension)
                 self.copy(filename, path_file, catalog_name[1])
-            elif any(fil.replace('.', '') in n for n in names):
-                catalog_name = next(item for item in names if item[0] == fil.replace('.', ''))
+            elif any(extension in n for n in names):
+                catalog_name = next(item for item in names if item[0] == extension)
                 self.copy(filename + fil, path_file, catalog_name[1])
             elif any('*' in n for n in names):
                 if os.path.isdir(Path(path_file) / filename):
                     self.copy(filename + fil, path_file, 'catalog')
                 else:
-                    self.copy(filename + fil, path_file, fil.replace('.', ''))
+                    self.copy(filename + fil, path_file, extension)
             else:
                 continue
             sleep(0.3)
