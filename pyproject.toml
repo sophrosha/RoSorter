@@ -31,3 +31,7 @@ include = ["utility*"]
 "utility.src.config" = ["*.py"]
 "utility.src.sorter" = ["*.py"]
 "utility.src.cli" = ["*.py"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
